@@ -5,9 +5,11 @@ argument-hint: "<model> <text>"
 allowed-tools: Bash(curl *)
 ---
 
-Genereer vector embeddings van tekst met een Ollama embedding model op de Linux workstation (192.168.1.28:11434).
+Genereer vector embeddings van tekst met een Ollama embedding model.
 
-De standaard embedding model is `nomic-embed-text` (768 dimensies).
+De Ollama host wordt bepaald door de `OLLAMA_HOST` omgevingsvariabele (default: `http://localhost:11434`).
+
+Het standaard embedding model is `nomic-embed-text` (768 dimensies).
 
 ## Als argumenten ontbreken
 
@@ -19,7 +21,7 @@ Toon usage: "/ollama-embed <model> <text>"
 
 ## Embedding genereren
 
-!`curl -s --max-time 30 -X POST http://192.168.1.28:11434/api/embed -d '{"model": "'$1'", "input": "'$2'"}' | python3 -c "
+!`curl -s --max-time 30 -X POST ${OLLAMA_HOST:-http://localhost:11434}/api/embed -d '{"model": "'$1'", "input": "'$2'"}' | python3 -c "
 import sys, json
 try:
     data = json.load(sys.stdin)

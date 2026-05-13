@@ -5,7 +5,9 @@ argument-hint: "<model> <prompt>"
 allowed-tools: Bash(curl *)
 ---
 
-Stuur een one-shot prompt naar een Ollama model op de Linux workstation (192.168.1.28:11434).
+Stuur een one-shot prompt naar een Ollama model.
+
+De Ollama host wordt bepaald door de `OLLAMA_HOST` omgevingsvariabele (default: `http://localhost:11434`).
 
 ## Als $1 of $2 leeg is
 
@@ -18,7 +20,7 @@ Voorbeeld: /ollama-chat llama3.1:8b Wat is de hoofdstad van Frankrijk?"
 
 Stuur de chat request met stream=false voor een enkel antwoord:
 
-!`curl -s --max-time 120 -X POST http://192.168.1.28:11434/api/chat -d '{"model": "'$1'", "messages": [{"role": "user", "content": "'$2'"}], "stream": false}' | python3 -c "
+!`curl -s --max-time 120 -X POST ${OLLAMA_HOST:-http://localhost:11434}/api/chat -d '{"model": "'$1'", "messages": [{"role": "user", "content": "'$2'"}], "stream": false}' | python3 -c "
 import sys, json
 try:
     data = json.load(sys.stdin)
@@ -33,12 +35,11 @@ try:
     print(f'[{model}] {eval_count} tokens, {tokens_per_sec:.0f} tok/s')
 except Exception as e:
     print(f'Error: {e}')
-    print(sys.stdin.read() if hasattr(sys.stdin, 'read') else '')
 "`
 
 Als de response "Error" bevat of leeg is:
 - Check of het model bestaat met `/ollama-models`
-- Als het model niet draait, kan er koude-start vertraging zijn (model moet laden)
+- Als het model niet draait kan er koude-start vertraging zijn
 
 ## Response bevat error field
 

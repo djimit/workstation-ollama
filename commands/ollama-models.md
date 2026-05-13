@@ -5,13 +5,15 @@ argument-hint: "[model-name]"
 allowed-tools: Bash(curl *)
 ---
 
-Toon lokale Ollama modellen op de Linux workstation (192.168.1.28:11434).
+Toon lokale Ollama modellen.
+
+De Ollama host wordt bepaald door de `OLLAMA_HOST` omgevingsvariabele (default: `http://localhost:11434`).
 
 ## Als GEEN modelnaam is opgegeven ($1 is leeg)
 
 Fetch de volledige modellenlijst en toon een tabel:
 
-!`curl -s --max-time 5 http://192.168.1.28:11434/api/tags | python3 -c "
+!`curl -s --max-time 5 ${OLLAMA_HOST:-http://localhost:11434}/api/tags | python3 -c "
 import sys, json
 models = json.load(sys.stdin).get('models', [])
 models.sort(key=lambda m: m.get('name', ''))
@@ -24,7 +26,7 @@ for m in models:
     print(f'{name}|{size_gb:.1f}|{params}|{quant}|{modified}')
 "`
 
-Als de lijst leeg is: "Geen modellen gevonden op de workstation. Gebruik /ollama-pull om er een te downloaden."
+Als de lijst leeg is: "Geen modellen gevonden. Gebruik /ollama-pull om er een te downloaden."
 
 Toon als tabel met kolommen: **Model**, **Size (GB)**, **Params**, **Quant**, **Modified**.
 
@@ -32,7 +34,7 @@ Toon als tabel met kolommen: **Model**, **Size (GB)**, **Params**, **Quant**, **
 
 Fetch details van dit specifieke model:
 
-!`curl -s --max-time 10 -X POST http://192.168.1.28:11434/api/show -d "{\"model\": \"$1\"}"`
+!`curl -s --max-time 10 -X POST ${OLLAMA_HOST:-http://localhost:11434}/api/show -d "{\"model\": \"$1\"}"`
 
 Toon deze informatie in secties:
 - **Model**: naam, parameter_size, quantization_level, format, family
@@ -42,6 +44,4 @@ Toon deze informatie in secties:
 - **Parameters**: de `parameters` string (key model parameters)
 - **Template**: "aanwezig" (zonder de hele template te tonen, tenzij expliciet gevraagd)
 
-Als de response een error bevat (bijv. `"error": "model '...' not found"`):
-- Toon: "Model '$1' niet gevonden op de workstation."
-- Suggestie: "Gebruik /ollama-models zonder argumenten om beschikbare modellen te zien."
+Als de response een error bevat: "Model '$1' niet gevonden. Gebruik /ollama-models zonder argumenten om beschikbare modellen te zien."

@@ -1,12 +1,12 @@
 {
   "name": "workstation-ollama",
-  "version": "0.1.0",
-  "description": "Manage Ollama models and run inference on the Linux workstation (192.168.1.28:11434) directly from Claude Code. Slash commands for status, models, pull, chat, and embeddings.",
+  "version": "0.1.1",
+  "description": "Manage Ollama models and run inference via REST API from Claude Code. Slash commands for status, models, pull, chat, and embeddings. Configure host via OLLAMA_HOST env var.",
   "author": {
     "name": "Dennis Landman"
   },
   "license": "MIT",
-  "keywords": ["ollama", "llm", "models", "inference", "embeddings", "workstation"],
+  "keywords": ["ollama", "llm", "models", "inference", "embeddings"],
   "commands": [
     "./commands/ollama-status.md",
     "./commands/ollama-models.md",
